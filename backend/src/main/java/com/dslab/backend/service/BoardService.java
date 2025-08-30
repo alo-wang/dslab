@@ -12,6 +12,6 @@ public interface BoardService extends GenericService<BoardEntity, BoardDto> {
     List<BoardDto> getAllBoard();
     BoardDto insertBoard(BoardDto dto);
     BoardDto updateBoard(BoardDto dto);
-    BoardDto deleteBoard(long id);
-    BoardDto getDetailBoard(long id);
+    BoardDto deleteBoard(Long id);
+    BoardDto getDetailBoard(Long id);
 }

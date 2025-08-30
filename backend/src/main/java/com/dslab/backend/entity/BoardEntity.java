@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 public class BoardEntity {
     @Id
     @Column(name="pst_sn")
-    long pstSn;
+    Long pstSn;
 
     @Column(name="ttl")
     String ttl;
@@ -29,7 +29,7 @@ public class BoardEntity {
     String cn;
 
     @Column(name="inq_cnt")
-    long inqCnt;
+    Long inqCnt;
 
     @Column(name="del_yn", length = 1)
     String delYn;

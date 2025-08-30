@@ -6,16 +6,23 @@ import com.dslab.backend.mapper.BoardMapper;
 import com.dslab.backend.repository.BoardJpa;
 import com.dslab.backend.service.common.GenericServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class BoardServiceImpl extends GenericServiceImpl<BoardEntity, BoardDto, Integer> {
+@Service
+@Transactional
+public class BoardServiceImpl
+        extends GenericServiceImpl<BoardEntity, BoardDto, Long>
+        implements BoardService{
     private final BoardJpa boardJpa;
 
     @Autowired
     public BoardServiceImpl(BoardJpa boardJpa) {
+        super(BoardMapper::toDto);
         this.boardJpa = boardJpa;
     }
 
@@ -44,7 +51,7 @@ public class BoardServiceImpl extends GenericServiceImpl<BoardEntity, BoardDto, 
     }
 
     // 삭제 deleteBoard
-    public BoardDto deleteBoard(long id){
+    public BoardDto deleteBoard(Long id){
         BoardEntity board = boardJpa.findById(id).orElseThrow();
         board.setDelYn("N");
         board.setDelDt(LocalDateTime.now());
@@ -53,8 +60,9 @@ public class BoardServiceImpl extends GenericServiceImpl<BoardEntity, BoardDto, 
     }
 
     // 상세 getDetailBoard
-    public BoardEntity getDetailBoard(long id){
-        return boardJpa.getById(id);
+    public BoardDto getDetailBoard(Long id){
+        BoardEntity board = boardJpa.getById(id);
+        return BoardMapper.toDto(board);
     }
 
     // 조회수 incrementViewCount

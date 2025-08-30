@@ -13,10 +13,10 @@ import java.time.LocalDateTime;
 @Builder
 @ToString
 public class BoardDto {
-    private long pstSn;
+    private Long pstSn;
     private String ttl;
     private String cn;
-    private long inqCnt;
+    private Long inqCnt;
     private String delYn;
     private LocalDateTime crtDt;
     private LocalDateTime mdfcnDt;
