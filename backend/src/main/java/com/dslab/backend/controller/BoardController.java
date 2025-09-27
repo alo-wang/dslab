@@ -2,26 +2,30 @@ package com.dslab.backend.controller;
 
 import com.dslab.backend.dto.BoardDto;
 import com.dslab.backend.service.BoardService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.tags.Tags;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name="게시판 API") // 스웨거
 @Slf4j
 @CrossOrigin(origins = "http://localhost:5173/")
 @RestController
-@RequestMapping("/boards")
+@RequestMapping("/api/boards")
 public class BoardController {
     @Autowired
     private BoardService boardService;
 
+    @Operation(summary = "board list 조회")
     @GetMapping("")
     public List<BoardDto> getList(){
         log.info("list 조회");
         return boardService.getAllBoard();
     }
-
 
     @PostMapping("")
     public BoardDto insert(BoardDto dto){
