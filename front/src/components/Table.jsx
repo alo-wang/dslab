@@ -1,24 +1,12 @@
 import { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
-import {Box, Table, TableBody, TableCell} from '@mui/material'; // 이걸로 맞추기
-// import Box from '@mui/material/Box';
-// import Table from '@mui/material/Table';
-// import TableBody from '@mui/material/TableBody';
-// import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
-import TableSortLabel from '@mui/material/TableSortLabel';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Paper from '@mui/material/Paper';
-import Checkbox from '@mui/material/Checkbox';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
+import {
+    Box, Checkbox, IconButton, Tooltip, FormControlLabel, Switch,
+    Table, TableContainer, TableBody, TableCell, TableHead,
+    TablePagination, TableRow, TableSortLabel,
+    Toolbar, Typography, Paper
+    } from '@mui/material';
 // import DeleteIcon from '@mui/icons-material/Delete';
 // import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
@@ -62,7 +50,7 @@ function EnhancedTableHead({
     rowCount,
     onRequestSort,
     enableSelection = true,
-    enableSorting = true
+    enableSorting = true,
     }){
     const createSortHandler = (property) => (event) => {
         onRequestSort(event, property);
@@ -134,6 +122,21 @@ function EnhancedTableToolbar({
     generalActions
     }) {
 //   const { numSelected } = props;
+    const renderActions = (actions) => {
+        if(!actions) return null;
+
+        // 배열인 경우
+        if(Array.isArray(actions)){
+                return actions.map((action, index) => (
+                    <Box key={action.key || index} component = "span">
+                        {action}
+                    </Box>
+                ));
+            }
+
+            // 단일 요소인 경우
+            return actions;
+        }
     return (
     <Toolbar
         sx={[
@@ -167,10 +170,10 @@ function EnhancedTableToolbar({
         </Typography> /* 테이블 전체 타이틀 */
     )}
     {/* 선택된 항목이 있을 때 표시할 액션 버튼들 */}
-    {numSelected > 0 && selectedActions}
+    {numSelected > 0 && renderActions(selectedActions)}
 
     {/* 일반적으로 표시할 액션 버튼들 */}
-    {numSelected === 0 && generalActions}
+    {numSelected === 0 && renderActions(generalActions)}
 
     {/*
     {numSelected > 0 ? (
@@ -195,8 +198,6 @@ function EnhancedTableToolbar({
 
 /**
  * 최종 데이터 표출 영역
- *
- *
  */
 export default function EnhancedTable({
     // 필수
@@ -212,7 +213,7 @@ export default function EnhancedTable({
 
     // 페이지네이션
     defaultRowsPerPage = 10,
-    rowsPerPageOptions = [5, 10, 25, 50],
+    rowsPerPageOptions = [5, 10],
 
     // 정렬 설정
     defaultOrder = 'asc',
@@ -228,15 +229,33 @@ export default function EnhancedTable({
 
     // 스타일링
     tableStyle = {},
-    containerStyle = {}
-}) {
+    containerStyle = {},
 
+    // 서버사이드 페이징
+    serverSide = false,
+    page: externalPage,
+    rowsPerPage: externalRowsPerPage,
+    totalCount,
+    onPageChange,
+    onRowsPerPageChange,
+}) {
     const [order, setOrder] = useState(defaultOrder);
     const [orderBy, setOrderBy] = useState(defaultOrderBy || (columns[0]?.id || ''));
     const [selected, setSelected] = useState([]);
-    const [page, setPage] = useState(0);
+
+    const [page, setPage] = useState(externalPage ?? 0);
+    const [rowsPerPage, setRowsPerPage] = useState(externalRowsPerPage ?? defaultRowsPerPage);
+
     const [dense, setDense] = useState(false);
-    const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPage);
+
+    // 서버사이드 모드일 때는 외부에서 page/rowsPerPage가 바뀌면 그걸 그대로 반영
+    useEffect(() => {
+        if(serverSide && typeof externalPage === 'number') setPage(externalPage);
+    }, [serverSide, externalPage]);
+
+    useEffect(() => {
+        if(serverSide && typeof externalRowsPerPage === 'number') setRowsPerPage(externalRowsPerPage);
+    }, [serverSide, externalRowsPerPage]);
 
     /* 정렬 요청 */
     const handleRequestSort = (event, property) => {
@@ -287,13 +306,23 @@ export default function EnhancedTable({
 
     // 페이지 변경
     const handleChangePage = (event, newPage) => {
-        setPage(newPage);
+        if (serverSide && onPageChange) {
+            onPageChange(newPage);
+        } else {
+            setPage(newPage);
+        }
     };
 
     // 페이지당 행 수 변경
     const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
+        const value = parseInt(event.target.value, 10);
+
+        if(serverSide && onRowsPerPageChange){
+            onRowsPerPageChange(value);
+        }else{
+            setRowsPerPage(value);
+            setPage(0);
+        }
     };
 
     // padding 설정
@@ -301,10 +330,10 @@ export default function EnhancedTable({
         setDense(event.target.checked);
     };
 
-    // 빈 행 계산
-    const emptyRows = enablePagination
-        ? (page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0)
-        : 0;
+    // 전체 행 개수: 서버사이드면 totalCount, 아니면 data.length
+    const totalRows = serverSide
+        ? (typeof totalCount === 'number' ? totalCount : data.length)
+        : data.length;
 
     // 표시할 행들
     const visibleRows = useMemo(() => {
@@ -313,11 +342,19 @@ export default function EnhancedTable({
         if(enableSorting && order){
             sortedData = sortedData.sort(getComparator(order, orderBy));
         }
-        if(enablePagination){
-            return sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+        if(enablePagination && !serverSide){
+            return sortedData.slice(
+                page * rowsPerPage,
+                page * rowsPerPage + rowsPerPage
+            );
         }
         return sortedData;
-    }, [data, order, orderBy, page, rowsPerPage, enableSorting, enablePagination]);
+    }, [data, order, orderBy, page, rowsPerPage, enableSorting, enablePagination, serverSide]);
+
+    // 빈 행 계산
+    const emptyRows = enablePagination
+        ? Math.max(0, rowsPerPage - visibleRows.length)
+        : 0;
 
     // 컬럼에서 값 가져오기
     const getCellValue = (row, column) => {
@@ -412,7 +449,7 @@ export default function EnhancedTable({
             <TablePagination
                     rowsPerPageOptions={rowsPerPageOptions}
                     component="div"
-                    count={data.length}
+                    count={totalRows}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}
