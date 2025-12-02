@@ -2,14 +2,11 @@ import { useState, useEffect, useMemo } from 'react';
 import { getBbsList } from '../service/bbsService';
 
 import EnhancedTable from '../components/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-
-
+import { Button, TableBody, TableCell } from '@mui/material';
 
 const BoardList = () => {
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
     const [totalCount, setTotalCount] = useState(0);
     const [list, setList] = useState([]); // 첫 렌더링시 데이터가 아직 없으므로 빈 리스트 상태([])로 시작한다.
 
@@ -72,12 +69,12 @@ const headCells = [
             </div>
         )
     },
-    {
+/*     {
         id: 'cn',
         label: '내용',
         sortable: true,
         minWidth: 120
-    },
+    }, */
     {
         id: 'inqCnt',
         label: '조회수',
@@ -86,12 +83,12 @@ const headCells = [
         sortable:true,
         minWidth:80
     },
-    {
+/*     {
         id: 'delYn',
         numeric: true,
         disablePadding: false,
         label: '삭제여부',
-    },
+    }, */
     {
         id: 'crtDt',
         label: '생성일',
@@ -127,6 +124,7 @@ const headCells = [
                 defaultOrderBy="crtDt" // createdAt
                 defaultOrder="desc"
             />
+            <Button variant="contained">글쓰기</Button>
 
             {/*
             <EnhancedTable

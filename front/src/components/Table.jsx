@@ -209,10 +209,10 @@ export default function EnhancedTable({
     enableSelection = true,
     enableSorting = true,
     enablePagination = true,
-    enableDensePadding = true,
+    // enableDensePadding = true,
 
     // 페이지네이션
-    defaultRowsPerPage = 10,
+    defaultRowsPerPage = 5,
     rowsPerPageOptions = [5, 10],
 
     // 정렬 설정
@@ -457,12 +457,12 @@ export default function EnhancedTable({
             />
         )}
         </Paper>
-        {enableDensePadding && (
+{/*         {enableDensePadding && (
             <FormControlLabel
                 control={<Switch checked={dense} onChange={handleChangeDense} />} // control={<Switch checked={dense} onChange={handleChangeDense} />}
                 label="Dense padding"
             />
-        )}
+        )} */}
     </Box>
     );
 }
