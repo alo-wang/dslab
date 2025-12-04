@@ -1,5 +1,6 @@
 package com.dslab.backend.controller;
 
+import com.dslab.backend.common.api.ApiResponse;
 import com.dslab.backend.dto.BoardDto;
 import com.dslab.backend.service.BoardService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,10 +42,18 @@ public class BoardController {
 
     @Operation(summary = "선택 글 상세")
     @GetMapping("/{pstSn}")
+    public ApiResponse<BoardDto> detail(@PathVariable Long pstSn){
+        log.info("선택 글 상세: {}", pstSn);
+        BoardDto dto = boardService.getDetailBoard(pstSn);
+        return ApiResponse.ok(dto); // 프론트로 전달~
+    }
+    /* 평면 구조일때
+    @GetMapping("/{pstSn}")
     public BoardDto detail(@PathVariable Long pstSn){
         log.info("선택 글 상세: {}", pstSn);
         return boardService.getDetailBoard(pstSn);
     }
+    */
 
     @Operation(summary = "선택 글 수정")
     @PutMapping("/{pstSn}")
