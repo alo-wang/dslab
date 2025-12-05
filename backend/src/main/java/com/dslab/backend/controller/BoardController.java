@@ -28,24 +28,26 @@ public class BoardController {
 
     @Operation(summary = "board list 조회")
     @GetMapping("")
-    public List<BoardDto> getList(){
+    public ApiResponse<List<BoardDto>> getList(){
         log.info("list 조회");
-        return boardService.getAllBoard();
+        List<BoardDto> dt = boardService.getAllBoard();
+        return ApiResponse.ok(dt);
     }
 
     @Operation(summary = "새 글 생성")
     @PostMapping("")
-    public BoardDto insert(@RequestBody BoardDto dto){
+    public ApiResponse<BoardDto> insert(@RequestBody BoardDto dto){
         log.info("새 글 생성: {}", dto);
-        return boardService.insertBoard(dto);
+        BoardDto dt = boardService.insertBoard(dto);
+        return ApiResponse.ok(dt);
     }
 
     @Operation(summary = "선택 글 상세")
     @GetMapping("/{pstSn}")
     public ApiResponse<BoardDto> detail(@PathVariable Long pstSn){
         log.info("선택 글 상세: {}", pstSn);
-        BoardDto dto = boardService.getDetailBoard(pstSn);
-        return ApiResponse.ok(dto); // 프론트로 전달~
+        BoardDto dt = boardService.getDetailBoard(pstSn);
+        return ApiResponse.ok(dt); // 프론트로 전달~
     }
     /* 평면 구조일때
     @GetMapping("/{pstSn}")
@@ -57,28 +59,31 @@ public class BoardController {
 
     @Operation(summary = "선택 글 수정")
     @PutMapping("/{pstSn}")
-    public BoardDto update(
+    public ApiResponse<BoardDto> update(
             @PathVariable Long pstSn,
             @RequestBody BoardDto dto){
         log.info("선택 글 수정: {}", pstSn);
         dto.setPstSn(pstSn);
-        return boardService.updateBoard(dto);
+        BoardDto dt = boardService.updateBoard(dto);
+        return ApiResponse.ok(dt);
     }
 
     @Operation(summary = "선택 글 삭제")
-    @DeleteMapping("{pstSn}")
-    public BoardDto delete(@PathVariable Long pstSn){
+    @DeleteMapping("/{pstSn}")
+    public ApiResponse<BoardDto> delete(@PathVariable Long pstSn){
         log.info("선택 글 삭제");
-        return boardService.deleteBoard(pstSn);
+        BoardDto dt = boardService.deleteBoard(pstSn);
+        return ApiResponse.ok(dt);
     }
 
     @Operation(summary = "board list 조회(page, size)")
     @GetMapping("/page")
-    public Page<BoardDto> getListWithPaging(
+    public ApiResponse<Page<BoardDto>> getListWithPaging(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ){
         log.info("페이징 목록 조회 page={}, size={}", page, size);
-        return boardService.getListWithPaging(page, size);
+        Page<BoardDto> dt = boardService.getListWithPaging(page, size);
+        return ApiResponse.ok(dt);
     }
 }
