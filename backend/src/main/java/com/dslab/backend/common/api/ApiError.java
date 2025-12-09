@@ -10,7 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class ApiError {
-    @Schema(description = "에러 코드", example = "B001")
+    @Schema(description = "에러 코드", example = "404")
     private String code;
 
     @Schema(description = "에러 메시지", example = "게시글을 찾을 수 없습니다.")

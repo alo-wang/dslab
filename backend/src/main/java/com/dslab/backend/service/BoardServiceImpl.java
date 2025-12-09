@@ -2,6 +2,7 @@ package com.dslab.backend.service;
 
 import com.dslab.backend.dto.BoardDto;
 import com.dslab.backend.entity.BoardEntity;
+import com.dslab.backend.global.exception.BoardNotFoundException;
 import com.dslab.backend.mapper.BoardMapper;
 import com.dslab.backend.repository.BoardJpa;
 import com.dslab.backend.service.common.GenericServiceImpl;
@@ -69,7 +70,8 @@ public class BoardServiceImpl
     // 상세 getDetailBoard
     public BoardDto getDetailBoard(Long id){
         BoardEntity board = boardJpa.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("게시글이 없습니다. id=" + id));
+                // .orElseThrow(() -> new IllegalArgumentException("게시글이 없습니다. id=" + id));
+                .orElseThrow(() -> new BoardNotFoundException("게시글이 없습니다. id=" + id));
         board.setInqCnt(board.getInqCnt()+1); // 조회수 증가, incrementViewCount
         board.setMdfcnDt(LocalDateTime.now());
         return BoardMapper.toDto(board);
