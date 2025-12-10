@@ -1,4 +1,4 @@
-import { Link, Route, Routes } from 'react-router-dom' 
+import { Link, Route, Routes } from 'react-router-dom'
 import List from "./pages/BoardList";
 import Detail from "./pages/BoardDetail";
 import Headers from './components/Headers';
@@ -9,8 +9,8 @@ function App() {
         <>
             <Headers></Headers>
             <Routes>
-                <Route path="/list" element={<List />}></Route>
-                <Route path="/detail" element={<Detail />}></Route>
+                <Route path="/boards" element={<List />} />
+                <Route path="/boards/:pstSn" element={<Detail />} />
             </Routes>
         </>
     )

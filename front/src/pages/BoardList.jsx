@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom'
 import { getBbsList } from '../service/bbsService';
-
 import EnhancedTable from '../components/Table';
 import { Button, TableBody, TableCell } from '@mui/material';
 
@@ -9,25 +9,31 @@ const BoardList = () => {
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [totalCount, setTotalCount] = useState(0);
     const [list, setList] = useState([]); // 첫 렌더링시 데이터가 아직 없으므로 빈 리스트 상태([])로 시작한다.
+    const navigate = useNavigate(); // 라우터 훅
 
     useEffect(() => { // 렌더링 이후에 실행할 코드를 등록하는 훅
         const fetchList = async () => { // fetchList 라는 비동기 함수 정의
             try{ // 예외처리 블럭
-                const pageData = await getBbsList(page, rowsPerPage); // 만들어둔 서비스 함수(getBbsList())를 비동기(await)로 해결된 호출한 값을 변수(pageData)에 넣어준다
+                const pageData = await getBbsList(page, rowsPerPage); // 만들어둔 서비스 함수(getBbsList())를 비동기(await)로 해결된 호출한 값을 변수(pageData)에 넣어준다. 여기서 Page<BoardDto>만 옴
                 const rows = (pageData.content || []) // Page 객체 안에 둘어있는 실제 게시글 배열(pageData.content)이 undefined 이거나 null 이라도 에러가 안나게 빈배열로 대처하는 안전 장치
                 .map((item) => ({
-                        ...item, // item 안에 있는 모든 필드를 그대로 복사
-                        id: item.pstSn, // 컴포넌트에 고유한 아이디가 필요 할 수 있어 한번더 넣어주는 값
+                    ...item, // item 안에 있는 모든 필드를 그대로 복사
+                    id: item.pstSn, // 컴포넌트에 고유한 아이디가 필요 할 수 있어 한번더 넣어주는 값
                 })); // 배열의 각 요소(item)을 원하는 모양으로 변환해서 새배열(rows)을 만든다
                 setList(rows); // 만든 새배열(rows)를 상태(list)에 저장, 이때 리액트가 변경된 상태값을 컴포넌트에 다시 렝더링 하여 새 데이터를 내려보낸다.
-                setTotalCount(pageData.totalElements || rows.length); // 전체 갯수
+                setTotalCount(pageData.totalElements ?? rows.length); // 전체 갯수
                 console.log('rows: ',rows);
-            }catch(error){
+            }catch(err){
                 console.error('목록 로딩 중 에러:', err);
             }
         };
         fetchList(); // 정의한 함수를 호출!
     },[page, rowsPerPage]); // 빈배열([])은 마운트될 때 딱 한번만 실행하라는 의미. 배열에 state값을 넣으면 해당 state의 값이 바뀔때마다 실행하라는 의미
+
+    // 셀 클릭시
+    const handleRowClick = (row) => {
+        navigate(`/boards/${row.pstSn}`);
+    };
 
 /**  전체 목록 호출시
     useEffect(()=>{
@@ -123,6 +129,7 @@ const headCells = [
 //                 defaultRowsPerPage={10}
                 defaultOrderBy="crtDt" // createdAt
                 defaultOrder="desc"
+                onRowClick={handleRowClick}
             />
             <Button variant="contained">글쓰기</Button>
 
