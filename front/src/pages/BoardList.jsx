@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'; // 목록 버튼에 직접적으로 관련, 옛날 버전에서는 useHistory()를 사용했음, v6부터 변경됨
 import { getBbsList } from '../service/bbsService';
 import EnhancedTable from '../components/Table';
 import { Button, TableBody, TableCell } from '@mui/material';
@@ -32,7 +32,14 @@ const BoardList = () => {
 
     // 셀 클릭시
     const handleRowClick = (row) => {
-        navigate(`/boards/${row.pstSn}`);
+        navigate(`/boards/${row.pstSn}`,{
+            state: {
+                from: {
+                    page,
+                    rowsPerPage,
+                },
+            },
+        });
     };
 
 /**  전체 목록 호출시
