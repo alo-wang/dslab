@@ -26,8 +26,7 @@ export const getAllBbsList = async () => {
     return apiRes.data;
 };
 
-// 상세, 수정, 삭제 api 필요
-// 파일 추가 삭제도 api 잘 타는지 확인 필요
+// 상세 호출(선택글)
 export const getDetail = async (pstSn) => {
     const res = await axios.get('/api/boards/'+pstSn);
     console.log("[getDetail] 응답데이터 : ",res.data);
@@ -38,4 +37,27 @@ export const getDetail = async (pstSn) => {
     return apiRes.data;
 }
 
+// 파일 추가 삭제도 api 잘 타는지 확인 필요
+// 게시글 작성
+export const createBoard = async (dto) => {
+    // 작성, 수정 필요
+    const res = await axios.post('/api/boards/', dto);
+    console.log("[getWrite] 응답데이터 : ",res.data);
+    const apiRes = res.data;
+    if(!apiRes.success){
+        throw apiRes.error || new Error('게시글 작성 실패');
+    }
+    return apiRes.data;
+}
 
+// 게시글 수정
+export const updateBoard = async (pstSn, dto) => {
+    // 작성, 수정 필요
+    const res = await axios.put(`/api/boards/{pstSn}`, dto);
+    console.log("[getWrite] 응답데이터 : ",res.data);
+    const apiRes = res.data;
+    if(!apiRes.success){
+        throw apiRes.error || new Error('게시글 수정 실패');
+    }
+    return apiRes.data;
+}

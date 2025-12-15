@@ -1,15 +1,18 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom'; // 목록 버튼에 직접적으로 관련, 옛날 버전에서는 useHistory()를 사용했음, v6부터 변경됨
+import { useLocation, useNavigate } from 'react-router-dom'; // 목록 버튼에 직접적으로 관련, 옛날 버전에서는 useHistory()를 사용했음, v6부터 변경됨
 import { getBbsList } from '../service/bbsService';
 import EnhancedTable from '../components/Table';
 import { Button, TableBody, TableCell } from '@mui/material';
 
 const BoardList = () => {
-    const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const navigate = useNavigate(); // 라우터 훅
+    const location = useLocation();
+    const from = location.state?.from;
+
+    const [page, setPage] = useState(from?.page ?? 0); // 내부 상태
+    const [rowsPerPage, setRowsPerPage] = useState(from?.rowsPerPage ?? 5);
     const [totalCount, setTotalCount] = useState(0);
     const [list, setList] = useState([]); // 첫 렌더링시 데이터가 아직 없으므로 빈 리스트 상태([])로 시작한다.
-    const navigate = useNavigate(); // 라우터 훅
 
     useEffect(() => { // 렌더링 이후에 실행할 코드를 등록하는 훅
         const fetchList = async () => { // fetchList 라는 비동기 함수 정의

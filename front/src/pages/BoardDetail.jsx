@@ -29,7 +29,10 @@ const BoardDetail = () => {
 
     const handBack = () => {
         if(from){
-            navigate(`/boards?page=${from.page}&size=${from.rowsPerPage}`);
+            // navigate(`/boards?page=${from.page}&size=${from.rowsPerPage}`);
+            navigate('/boards',{
+                state: {from},
+            });
         }else{
             navigate('/boards')
         }
