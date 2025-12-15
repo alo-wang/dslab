@@ -24,7 +24,6 @@ public class BoardServiceImpl
         implements BoardService{
     private final BoardJpa boardJpa;
 
-    @Autowired
     public BoardServiceImpl(BoardJpa boardJpa) {
         super(BoardMapper::toDto);
         this.boardJpa = boardJpa;

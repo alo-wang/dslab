@@ -12,16 +12,18 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 @ToString
-public class BoardDto {
-    @Schema(description = "게시판 일련번호", example = "1")
-    private Long pstSn;
+public class AtchFileDto {
+    @Schema(description = "파일 일련번호", example = "1")
+    private Long fileSn;
 
-    @Schema(description = "게시글 제목", example = "게시글 제목입니다....!")
-    private String ttl;
-    private String cn;
-    private Long inqCnt;
+    private String atchTrgtCd;
+    private String atchTrgtKey;
+    private String filePath;
+    private int fileSz;
+    private String fileNm;
+    private String uldFileNm;
+    private String fileExtnNm;
     private String delYn;
     private LocalDateTime crtDt;
-    private LocalDateTime mdfcnDt;
     private LocalDateTime delDt;
 }

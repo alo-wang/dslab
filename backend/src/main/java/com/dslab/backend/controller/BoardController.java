@@ -1,7 +1,9 @@
 package com.dslab.backend.controller;
 
 import com.dslab.backend.common.api.ApiResponse;
+import com.dslab.backend.dto.AtchFileDto;
 import com.dslab.backend.dto.BoardDto;
+import com.dslab.backend.service.AtchFileService;
 import com.dslab.backend.service.BoardService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,9 +23,11 @@ import java.util.List;
 public class BoardController {
     // @Autowired
     private final BoardService boardService;
+    private final AtchFileService atchFileService;
 
-    public BoardController(BoardService boardService) {
+    public BoardController(BoardService boardService, AtchFileService atchFileService) {
         this.boardService = boardService;
+        this.atchFileService = atchFileService;
     }
 
     @Operation(summary = "board list 조회")
@@ -84,6 +88,14 @@ public class BoardController {
     ){
         log.info("페이징 목록 조회 page={}, size={}", page, size);
         Page<BoardDto> dt = boardService.getListWithPaging(page, size);
+        return ApiResponse.ok(dt);
+    }
+
+    @Operation(summary = "첨부파일 조회")
+    @GetMapping("/{pstSn}/attachments")
+    public ApiResponse<List<AtchFileDto>> getAttachments(@PathVariable Long pstSn){
+        log.info("첨부파일 조회");
+        List<AtchFileDto> dt = atchFileService.getBoardFiles(pstSn);
         return ApiResponse.ok(dt);
     }
 }
