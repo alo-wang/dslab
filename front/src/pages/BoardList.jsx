@@ -45,6 +45,10 @@ const BoardList = () => {
         });
     };
 
+    const goWrite = () => {
+        navigate(`/boards/write/`);
+    }
+
 /**  전체 목록 호출시
     useEffect(()=>{
         getBbsList().then((data) => {
@@ -141,7 +145,7 @@ const headCells = [
                 defaultOrder="desc"
                 onRowClick={handleRowClick}
             />
-            <Button variant="contained">글쓰기</Button>
+            <Button variant="contained" onClick={goWrite}>글쓰기</Button>
 
             {/*
             <EnhancedTable

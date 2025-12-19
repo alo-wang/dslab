@@ -41,7 +41,7 @@ export const getDetail = async (pstSn) => {
 // 게시글 작성
 export const createBoard = async (dto) => {
     // 작성, 수정 필요
-    const res = await axios.post('/api/boards/', dto);
+    const res = await axios.post('/api/boards', dto);
     console.log("[getWrite] 응답데이터 : ",res.data);
     const apiRes = res.data;
     if(!apiRes.success){
@@ -53,7 +53,7 @@ export const createBoard = async (dto) => {
 // 게시글 수정
 export const updateBoard = async (pstSn, dto) => {
     // 작성, 수정 필요
-    const res = await axios.put(`/api/boards/{pstSn}`, dto);
+    const res = await axios.put(`/api/boards/${pstSn}`, dto);
     console.log("[getWrite] 응답데이터 : ",res.data);
     const apiRes = res.data;
     if(!apiRes.success){

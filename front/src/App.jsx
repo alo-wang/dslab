@@ -13,6 +13,7 @@ function App() {
                 <Route path="/boards" element={<List />} />
                 <Route path="/boards/:pstSn" element={<Detail />} /> {/* :pstSn 에서 '':'이 붙는 이유는 매번 달라질 수 있는 변수 자리라는 표시, 즉 동적 세그먼트!  */}
                 <Route path="/boards/:pstSn/edit" element={<Form />} />
+                <Route path="/boards/write" element={<Form />} />
             </Routes>
         </>
     )
