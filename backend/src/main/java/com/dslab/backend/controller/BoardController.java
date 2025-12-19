@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/boards")
-@CrossOrigin(origins = "http://localhost:5173/")
+// @CrossOrigin(origins = "http://localhost:5173")
 @Slf4j
 @Tag(name="게시판 API") // 스웨거
 public class BoardController {

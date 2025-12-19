@@ -40,6 +40,9 @@ public class BoardServiceImpl
     // 생성 insertBoard
     public BoardDto insertBoard(BoardDto dto){
         BoardEntity board = BoardMapper.toEntity(dto);
+        board.setInqCnt(0L);
+        board.setDelYn("N");
+        board.setCrtDt(LocalDateTime.now());
         BoardEntity saveBoard = boardJpa.save(board);
         return BoardMapper.toDto(saveBoard);
     }
@@ -71,7 +74,8 @@ public class BoardServiceImpl
         BoardEntity board = boardJpa.findById(id)
                 // .orElseThrow(() -> new IllegalArgumentException("게시글이 없습니다. id=" + id));
                 .orElseThrow(() -> new BoardNotFoundException("게시글이 없습니다. id=" + id));
-        board.setInqCnt(board.getInqCnt()+1); // 조회수 증가, incrementViewCount
+        Long current = board.getInqCnt() == null ? 0L : board.getInqCnt();
+        board.setInqCnt(current+1); // 조회수 증가, incrementViewCount // 2번씩 조회되네..
         board.setMdfcnDt(LocalDateTime.now());
         return BoardMapper.toDto(board);
     }

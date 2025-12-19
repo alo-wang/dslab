@@ -1,9 +1,6 @@
 package com.dslab.backend.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class BoardEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="pst_sn")
     Long pstSn;
 
@@ -29,7 +27,7 @@ public class BoardEntity {
     String cn;
 
     @Column(name="inq_cnt")
-    Long inqCnt;
+    Long inqCnt = 0L;   // 기본값 0
 
     @Column(name="del_yn", length = 1)
     String delYn;
