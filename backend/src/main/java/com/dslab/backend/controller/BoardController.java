@@ -46,7 +46,17 @@ public class BoardController {
         return ApiResponse.ok(dt);
     }
 
-    @Operation(summary = "선택 글 상세")
+    // 조회수 증가 X
+    @Operation(summary = "선택 글 상세(수정용, 조회수 증가 없음)")
+    @GetMapping("/{pstSn}/edit")
+    public ApiResponse<BoardDto> detailForEdit(@PathVariable Long pstSn){
+        log.info("선택 글 상세: {}", pstSn);
+        BoardDto dt = boardService.getDetailOnlyBoard(pstSn);
+        return ApiResponse.ok(dt); // 프론트로 전달~
+    }
+
+    // 조회수 증가 O
+    @Operation(summary = "선택 글 상세(조회수 증가)")
     @GetMapping("/{pstSn}")
     public ApiResponse<BoardDto> detail(@PathVariable Long pstSn){
         log.info("선택 글 상세: {}", pstSn);

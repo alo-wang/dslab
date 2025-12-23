@@ -32,7 +32,8 @@ public class BoardServiceImpl
     // 목록 getAllBoard
     @Transactional(readOnly = true)
     public List<BoardDto> getAllBoard(){
-        return boardJpa.findAll().stream()
+        // return boardJpa.findAll().stream()
+        return boardJpa.findByDelYn("N").stream()
                 .map(BoardMapper::toDto)
                 .collect(Collectors.toList());
     }
@@ -69,7 +70,14 @@ public class BoardServiceImpl
         return BoardMapper.toDto(deleted);
     }
 
-    // 상세 getDetailBoard
+    // 조회수 증가 없이 상세조회(수정 페이지)
+    public BoardDto getDetailOnlyBoard(Long id){
+        BoardEntity board = boardJpa.findById(id)
+                .orElseThrow(() -> new BoardNotFoundException("게시글이 없습니다. id=" +id));
+        return BoardMapper.toDto(board);
+    }
+
+    // 조회수 +1 하면서 상세 조회(상세 페이지)
     public BoardDto getDetailBoard(Long id){
         BoardEntity board = boardJpa.findById(id)
                 // .orElseThrow(() -> new IllegalArgumentException("게시글이 없습니다. id=" + id));
@@ -89,7 +97,8 @@ public class BoardServiceImpl
                 size,
                 Sort.by(Sort.Direction.DESC, "pstSn") // 최신글 순
         );
-        return boardJpa.findAll(pageable)
+        // return boardJpa.findAll(pageable)
+        return boardJpa.findByDelYn("N", pageable)
                 .map(BoardMapper::toDto);
     }
 }
