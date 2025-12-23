@@ -26,7 +26,7 @@ export const getAllBbsList = async () => {
     return apiRes.data;
 };
 
-// 상세 호출(선택글)
+// 상세 보기 호출(선택글)
 export const getDetail = async (pstSn) => {
     const res = await axios.get('/api/boards/'+pstSn);
     console.log("[getDetail] 응답데이터 : ",res.data);
@@ -37,7 +37,17 @@ export const getDetail = async (pstSn) => {
     return apiRes.data;
 }
 
-// 파일 추가 삭제도 api 잘 타는지 확인 필요
+// 상세 보기 호출(수정글)
+export const getDetailForEdit = async (pstSn) => {
+                    const res = await axios.get(`/api/boards/${pstSn}/edit`);
+    console.log("[getDetailForEdit] 응답데이터 : ",res.data);
+    const apiRes = res.data;
+    if(!apiRes.success){
+        throw apiRes.error || new Error('수정용 상세 조회 실패');
+    }
+    return apiRes.data;
+}
+
 // 게시글 작성
 export const createBoard = async (dto) => {
     // 작성, 수정 필요
@@ -58,6 +68,17 @@ export const updateBoard = async (pstSn, dto) => {
     const apiRes = res.data;
     if(!apiRes.success){
         throw apiRes.error || new Error('게시글 수정 실패');
+    }
+    return apiRes.data;
+}
+
+// 게시글 삭제
+export const deleteBoard = async (pstSn) => {
+    const res = await axios.delete(`/api/boards/${pstSn}`);
+    console.log("[deleteBoard] 응답데이터 : ",res.data);
+    const apiRes = res.data;
+    if(!apiRes.success){
+        throw apiRes.error || new Error('게시글 삭제 실패');
     }
     return apiRes.data;
 }

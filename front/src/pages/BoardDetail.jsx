@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { getDetail } from '../service/bbsService';
+import { getDetail, deleteBoard } from '../service/bbsService';
 import { Button } from '@mui/material';
 
 const BoardDetail = () => {
@@ -47,6 +47,23 @@ const BoardDetail = () => {
     // useEffect 내 fetchDetail 선언 후
     console.log('after detail : ',detail);    // data 호출, 즉 다시 렌더된 상태
 
+    const deleteItem = async (pstSn) => {
+        if(!pstSn) return;  // pstSn이 없거나 잘못 넘어온 상황방지용!
+
+        const ok = window.confirm('정말 삭제 할꺼니?');
+        if(!ok) return
+
+        try{
+            const data = await deleteBoard(pstSn);
+            setDetail(data);
+            console.log('data : ', data);
+            navigate('/boards');
+        }catch(err){
+            console.error('삭제 에러:',err);
+            setError(err.message || '삭제 중 에러가 발생했습니다.');
+        }
+    }
+
     const handBack = () => {
         if(from){ // location.state?.from; 에서 꺼낸 값이 있으면, 즉 '목록 페이지에서 넘어온 경우' 라면 'state'에 'from'정보를 다시 실어서 보내줌
             // navigate(`/boards?page=${from.page}&size=${from.rowsPerPage}`); // 이 방식으로 하면 url에 페이징 정보까지 다 보여짐
@@ -70,6 +87,7 @@ const BoardDetail = () => {
             <div>{detail?.cn}</div>
             <Button variant="contained" onClick={handBack}>목록</Button>
             <Button variant="contained" onClick={() => goEdit(detail?.pstSn)}>수정</Button>
+            <Button variant="contained" onClick={() => deleteItem(detail?.pstSn)}>삭제</Button>
         </>
     )
 }

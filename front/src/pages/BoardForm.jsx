@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { getDetail, updateBoard, createBoard } from '../service/bbsService';
+import { getDetailForEdit, updateBoard, createBoard } from '../service/bbsService';
 import { Box, TextField, Button } from '@mui/material';
 
 const BoardForm = () => {
@@ -23,7 +23,7 @@ const BoardForm = () => {
         const fetch = async () => {
             try{
                 setLoading(true);
-                const data = await getDetail(pstSn);
+                const data = await getDetailForEdit(pstSn);
                 console.log("data : ",data);
                 // setDetail(data); // 수정전 기본 데이터
                 setTitle(data.ttl);
