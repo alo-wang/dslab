@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useBacks } from '../hooks/useBacks';
 import { getDetailForEdit, updateBoard, createBoard } from '../service/bbsService';
 import { Box, TextField, Button } from '@mui/material';
 
@@ -13,9 +14,10 @@ const BoardForm = () => {
 
     const navigate = useNavigate();
     const location = useLocation();
+    const { handBack } = useBacks('/boards');
     console.log("pstSn : ",pstSn);
 
-    const from = location.state?.from;
+    // const from = location.state?.from;
 
     useEffect(() => {
         if(!pstSn) return;
@@ -39,7 +41,7 @@ const BoardForm = () => {
     },[pstSn]); // ,[pstSn] 안 넣으면 계ㅔㅔㅔㅔㅔㅔ속 내용을 부른다.
     // console.log("detail : ",detail);
 
-    const handBack = () => {
+/*     const handBack = () => {
         if(from) {
             navigate('/boards/', {
                 state: {from}
@@ -47,7 +49,7 @@ const BoardForm = () => {
         }else{
             navigate('/boards');
         }
-    }
+    } */
 
     const handleSubmit = async () => {
         try{

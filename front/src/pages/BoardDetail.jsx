@@ -2,11 +2,13 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { getDetail, deleteBoard } from '../service/bbsService';
 import { Button } from '@mui/material';
+import { useBacks } from '../hooks/useBacks';
 
 const BoardDetail = () => {
     const { pstSn } = useParams(); // URL의 :pstSn 값, 라우터에서 정보 꺼내오기
     const navigate = useNavigate(); // 리액트 라우터 훅, '페이지 이동을 제어하는 함수' 하나 리턴
     const location = useLocation(); // '주소 정보 전체'를 가져오는 훅
+    const { handBack } = useBacks('/boards');
     /** useLocation의 형태
      {
        pathname: "/boards/10",        // 현재 경로
@@ -61,17 +63,6 @@ const BoardDetail = () => {
         }catch(err){
             console.error('삭제 에러:',err);
             setError(err.message || '삭제 중 에러가 발생했습니다.');
-        }
-    }
-
-    const handBack = () => {
-        if(from){ // location.state?.from; 에서 꺼낸 값이 있으면, 즉 '목록 페이지에서 넘어온 경우' 라면 'state'에 'from'정보를 다시 실어서 보내줌
-            // navigate(`/boards?page=${from.page}&size=${from.rowsPerPage}`); // 이 방식으로 하면 url에 페이징 정보까지 다 보여짐
-            navigate('/boards',{
-                state: {from},
-            });
-        }else{ // 만약 from이 없다면 기본 목록 화면으로 이동
-            navigate('/boards')
         }
     }
 

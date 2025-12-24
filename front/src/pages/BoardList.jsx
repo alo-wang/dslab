@@ -38,6 +38,7 @@ const BoardList = () => {
         navigate(`/boards/${row.pstSn}`,{
             state: {
                 from: {
+                    type: 'boardList',
                     page,
                     rowsPerPage,
                 },
