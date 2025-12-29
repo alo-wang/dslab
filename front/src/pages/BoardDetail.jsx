@@ -24,7 +24,6 @@ const BoardDetail = () => {
      */
     const [detail, setDetail] = useState(null); // 게시글 상세 데이터
     const [error, setError] = useState(null);   // 상세 조회 중 발생한 에러 메시지 저장용
-    const [edit, setEdit] = useState(null);
 
     const from = location.state?.from;    // 목록 화면에서 넘어온 정보 꺼내기
     console.log('location :', location);  // 이전 페이지의 location 즉 주소 정보
@@ -36,8 +35,8 @@ const BoardDetail = () => {
                 const data = await getDetail(pstSn);    // 여기서 BoardDto 리턴
                 setDetail(data); // 불러온 상세 데이터를 detail 상태에 저장
                 console.log('data : ',data);
-                console.log('detail : ',detail);    // null 호출
-                console.log('setDetail : ',setDetail); // 안팍으로 찍어도, 함수 자체로 나옴
+                // console.log('detail : ',detail);    // null 호출
+                // console.log('setDetail : ',setDetail); // 안팍으로 찍어도, 함수 자체로 나옴
             } catch(err){
                 console.error('상세 조회 에러:',err);
                 setError(err.message || '상세 조회 중 오류가 발생했습니다.')
@@ -57,8 +56,8 @@ const BoardDetail = () => {
 
         try{
             const data = await deleteBoard(pstSn);
-            setDetail(data);
-            console.log('data : ', data);
+            // setDetail(data); // 삭제후 바로 나가 버리기 때문에 setDetail(data)은 의미가 없음
+            // console.log('data : ', data);
             navigate('/boards');
         }catch(err){
             console.error('삭제 에러:',err);

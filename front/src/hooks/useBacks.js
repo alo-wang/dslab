@@ -18,7 +18,6 @@ export function useBacks (defaultPath = '/') {
         // 브라우저 히스토리 기준
         if(window.history.length > 1) navigate(-1);
         else navigate(defaultPath);
-
 //        else{ // 만약 from이 없다면 기본 목록 화면으로 이동
 //            navigate('/boards')
 //        }
