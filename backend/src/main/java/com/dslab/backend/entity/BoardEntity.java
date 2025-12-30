@@ -18,26 +18,26 @@ public class BoardEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="pst_sn")
-    Long pstSn;
+    private Long pstSn;
 
     @Column(name="ttl")
-    String ttl;
+    private String ttl;
 
     @Column(name="cn", columnDefinition = "TEXT")
-    String cn;
+    private String cn;
 
     @Column(name="inq_cnt")
-    Long inqCnt = 0L;   // 기본값 0
+    private Long inqCnt = 0L;   // 기본값 0
 
     @Column(name="del_yn", length = 1)
-    String delYn;
+    private String delYn;
 
     @Column(name="crt_dt")
-    LocalDateTime crtDt;
+    private LocalDateTime crtDt;
 
     @Column(name="mdfcn_dt")
-    LocalDateTime mdfcnDt;
+    private LocalDateTime mdfcnDt;
 
     @Column(name="del_dt")
-    LocalDateTime delDt;
+    private LocalDateTime delDt;
 }

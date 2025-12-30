@@ -6,7 +6,6 @@ import com.dslab.backend.global.exception.BoardNotFoundException;
 import com.dslab.backend.mapper.BoardMapper;
 import com.dslab.backend.repository.BoardJpa;
 import com.dslab.backend.service.common.GenericServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;

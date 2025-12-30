@@ -5,13 +5,14 @@ import com.dslab.backend.dto.AtchFileDto;
 import com.dslab.backend.dto.BoardDto;
 import com.dslab.backend.service.AtchFileService;
 import com.dslab.backend.service.BoardService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.tags.Tags;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -21,7 +22,6 @@ import java.util.List;
 @Slf4j
 @Tag(name="게시판 API") // 스웨거
 public class BoardController {
-    // @Autowired
     private final BoardService boardService;
     private final AtchFileService atchFileService;
 
@@ -38,12 +38,27 @@ public class BoardController {
         return ApiResponse.ok(dt);
     }
 
-    @Operation(summary = "새 글 생성")
-    @PostMapping("")
-    public ApiResponse<BoardDto> insert(@RequestBody BoardDto dto){
-        log.info("새 글 생성: {}", dto);
-        BoardDto dt = boardService.insertBoard(dto);
-        return ApiResponse.ok(dt);
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    @Operation(summary = "새 글 생성(첨부파일 포함)")
+    @PostMapping(value="", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ApiResponse<BoardDto> insert(
+            // @RequestPart("board") BoardDto dto,
+            // @RequestPart(value = "board", required = false) String boardJson,
+            @RequestPart("board") String boardJson,
+            @RequestPart(value = "files", required = false) List<MultipartFile> files
+            // @RequestBody BoardDto dto // 게시'글'만 작성할때 사용
+    ) throws Exception {
+        BoardDto dto = objectMapper.readValue(boardJson, BoardDto.class);
+        BoardDto saveDt = boardService.insertBoard(dto);
+
+        if (files != null && !files.isEmpty()){
+            atchFileService.saveBoardFiles(saveDt.getPstSn(), files);
+        }
+
+        log.info("raw boardJson = {}", boardJson);
+        log.info("file count = {}", files != null? files.size() : 0);
+        return ApiResponse.ok(saveDt);
     }
 
     // 조회수 증가 X
