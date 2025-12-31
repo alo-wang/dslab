@@ -6,14 +6,15 @@ import { Box, TextField, Button } from '@mui/material';
 
 const BoardForm = () => {
     const { pstSn } = useParams();
-    const [ detail, setDetail ] = useState(null);   // {}안에 내용을 담은 setDetail에 내용이 안담겨.. 왜냐면 useState는 배열을 돌려주지, 객체를 돌려주는게 아님
+    // const [ detail, setDetail ] = useState(null);   // {}안에 내용을 담은 setDetail에 내용이 안담겨.. 왜냐면 useState는 배열을 돌려주지, 객체를 돌려주는게 아님
     const [ title, setTitle ] = useState('');
     const [ content, setContent ] = useState('');
+    const [ files, setFiles ] = useState('');
     const [ loading, setLoading ] = useState(false);
     const [ error, setError ] = useState(null);
 
     const navigate = useNavigate();
-    const location = useLocation();
+    // const location = useLocation();
     const { handBack } = useBacks('/boards');
     console.log("pstSn : ",pstSn);
 
@@ -63,9 +64,9 @@ const BoardForm = () => {
             let saved;
 
             if(pstSn){
-                saved = await updateBoard(pstSn,dto);
+                saved = await updateBoard(pstSn, dto, files);
             }else{
-                saved = await createBoard(dto);
+                saved = await createBoard(dto, files);
             }
             console.log('submit pstSn : ',pstSn, typeof pstSn);
             const targetPstSn = saved.pstSn ?? pstSn;
@@ -98,6 +99,13 @@ const BoardForm = () => {
                     defaultValue="내용을 입력하세요."
                     value={content || ''}
                     onChange={(e) => setContent(e.target.value)}
+                />
+            </Box>
+            <Box sx={{ width:500, mt:2 }}>
+                <input
+                    type="file"
+                    multiple
+                    onChange={(e) => setFiles(Array.from(e.target.files || []))}
                 />
             </Box>
             <Button variant="contained" onClick={handBack}>취소</Button>

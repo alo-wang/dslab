@@ -15,12 +15,15 @@ export function useBacks (defaultPath = '/') {
             return;
         }
 
+        // 상세 화면에서 'from'이 없으면 목록으로 이동
+        if(location.pathname.startsWith('/boards/')) {
+            navigate('/boards');
+            return;
+        }
+
         // 브라우저 히스토리 기준
         if(window.history.length > 1) navigate(-1);
         else navigate(defaultPath);
-//        else{ // 만약 from이 없다면 기본 목록 화면으로 이동
-//            navigate('/boards')
-//        }
     };
 
     return { handBack };

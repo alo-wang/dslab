@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { getDetail, deleteBoard } from '../service/bbsService';
-import { Button } from '@mui/material';
+import { getDetail, deleteBoard, getAttachments } from '../service/bbsService';
+import { Button, List, ListItem, ListItemText } from '@mui/material';
 import { useBacks } from '../hooks/useBacks';
 
 const BoardDetail = () => {
@@ -23,6 +23,7 @@ const BoardDetail = () => {
        setDetail -> 그 값을 바꾸는 함수
      */
     const [detail, setDetail] = useState(null); // 게시글 상세 데이터
+    const [attachments, setAttachments] = useState([]);
     const [error, setError] = useState(null);   // 상세 조회 중 발생한 에러 메시지 저장용
 
     const from = location.state?.from;    // 목록 화면에서 넘어온 정보 꺼내기
@@ -37,6 +38,8 @@ const BoardDetail = () => {
                 console.log('data : ',data);
                 // console.log('detail : ',detail);    // null 호출
                 // console.log('setDetail : ',setDetail); // 안팍으로 찍어도, 함수 자체로 나옴
+                const files = await getAttachments(pstSn);
+                setAttachments(files);
             } catch(err){
                 console.error('상세 조회 에러:',err);
                 setError(err.message || '상세 조회 중 오류가 발생했습니다.')
@@ -75,6 +78,22 @@ const BoardDetail = () => {
         <>
             <h1>{detail?.ttl}</h1>
             <div>{detail?.cn}</div>
+            <List>
+                {attachments.length === 0 && (
+                    <ListItem>
+                        <ListItemText primary="첨부파일 없음"/>
+                    </ListItem>
+                )}
+
+                {attachments.map((f) => (
+                    <ListItem key={f.fileSn} divider>
+                        <ListItemText
+                            primary={f.fileNm}
+                            secondary={`${(f.fileSz/1024).toFixed(1)}KB ${f.fileExtnNm}`}
+                        />
+                    </ListItem>
+                ))}
+            </List>
             <Button variant="contained" onClick={handBack}>목록</Button>
             <Button variant="contained" onClick={() => goEdit(detail?.pstSn)}>수정</Button>
             <Button variant="contained" onClick={() => deleteItem(detail?.pstSn)}>삭제</Button>
